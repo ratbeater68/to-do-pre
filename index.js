@@ -11,10 +11,10 @@ const listElement = document.querySelector(".to-do__list");
 const formElement = document.querySelector(".to-do__form");
 const inputElement = document.querySelector(".to-do__input");
 
-const LOCAL_STORAGE_KEY = 'tasks'
+const localStorageKey = 'tasks'
 
 function loadTasks() {
-	const userTasks = localStorage.getItem(LOCAL_STORAGE_KEY);
+	const userTasks = localStorage.getItem(localStorageKey);
 	if (userTasks) {
 		return JSON.parse(userTasks);
 	}
@@ -31,15 +31,13 @@ function createItem(item) {
 
 	textElement.textContent = item;
 
-	deleteButton.addEventListener('click', 
-	() => {
+	deleteButton.addEventListener('click', () => {
 		clone.remove();
 		const items = getTasksFromDOM();
 		saveTasks(items);
 	})
 
-	duplicateButton.addEventListener('click', 
-	() => {
+	duplicateButton.addEventListener('click', () => {
 		const itemName = textElement.textContent;
 		const newItem = createItem(itemName);
 		listElement.prepend(newItem);
@@ -47,14 +45,12 @@ function createItem(item) {
 		saveTasks(items);
 	})
 
-	editButton.addEventListener('click', 
-	() => {
+	editButton.addEventListener('click', () => {
 		textElement.setAttribute("contenteditable", "true");
 		textElement.focus();
 	})
 
-	textElement.addEventListener('blur', 
-	() => {
+	textElement.addEventListener('blur', () => {
 		textElement.setAttribute("contenteditable", "false");	
 		const items = getTasksFromDOM();
 		saveTasks(items);	
@@ -71,21 +67,19 @@ function getTasksFromDOM() {
 }
 
 function saveTasks(tasks) {
-	localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(tasks));	
+	localStorage.setItem(localStorageKey, JSON.stringify(tasks));	
 }
 
 items = loadTasks();
 items.forEach((item) => listElement.append(createItem(item)));
 
-formElement.addEventListener('submit', 
-(ev) => {
-	ev.preventDefault()
-	const text = inputElement.value;
-	if (text)
-	{
+formElement.addEventListener('submit', (ev) => {
+	ev.preventDefault();
+	const text = inputElement.value.trim();
+	if (text) {
 		listElement.prepend(createItem(text));
 		inputElement.value = '';
-		items = getTasksFromDOM()
-		saveTasks(items)
+		items = getTasksFromDOM();
+		saveTasks(items);
 	}
 })
